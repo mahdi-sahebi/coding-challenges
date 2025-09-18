@@ -1,13 +1,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include "com"
 
-
-typedef enum
-{
-    MC_SUCCESS = 0,
-    MC_ERR_RUNTIME
-}error_t;
 
 #define TOKEN_STR(EXP)      #EXP
 
