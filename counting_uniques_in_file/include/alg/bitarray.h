@@ -1,0 +1,7 @@
+#ifndef ALGORITHM_BITARRAY_H_
+#define ALGORITHM_BITARRAY_H_
+
+
+
+#endif /* ALGORITHM_BITARRAY_H_ */
+
