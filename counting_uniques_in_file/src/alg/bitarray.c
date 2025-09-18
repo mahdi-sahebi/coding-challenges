@@ -13,13 +13,13 @@ static uint32_t required_size(uint32_t capacity)
   return (uint32_t)ceilf(capacity / (float)BITS_PER_BYTE);
 }
 
-void bitarr_t_clear(bitarr_t* this)
+void bitarr_clear(bitarr_t* this)
 {
   const uint32_t size = required_size(this->capacity);
   memset(this->data, 0x00, size);
 }
 
-bitarr_t* bitarr_t_create(uint32_t capacity)
+bitarr_t* bitarr_create(uint32_t capacity)
 {
   const uint32_t size = required_size(capacity);
   bitarr_t* this = malloc(sizeof(bitarr_t) + size);
@@ -30,12 +30,12 @@ bitarr_t* bitarr_t_create(uint32_t capacity)
   return this;
 }
 
-void bitarr_t_destroy(bitarr_t* this)
+void bitarr_destroy(bitarr_t* this)
 {
   free(this);
 }
 
-void bitarr_t_set(bitarr_t* this, uint32_t index, bool bit)
+void bitarr_set(bitarr_t* this, uint32_t index, bool bit)
 {
   if (index >= this->capacity) {
     return;// TODO(MN): Error
@@ -51,7 +51,7 @@ void bitarr_t_set(bitarr_t* this, uint32_t index, bool bit)
   }
 }
 
-bool bitarr_t_get(bitarr_t* this, uint32_t index)
+bool bitarr_get(bitarr_t* this, uint32_t index)
 {
   if (index >= this->capacity) {
     return false;// TODO(MN): Error

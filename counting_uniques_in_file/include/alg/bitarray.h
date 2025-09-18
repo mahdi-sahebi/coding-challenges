@@ -13,11 +13,11 @@ typedef struct
 
 
 
-bitarr_t* bitarr_t_create(uint32_t capacity);
-void      bitarr_t_destroy(bitarr_t* this);
-void      bitarr_t_clear(bitarr_t* this);
-void      bitarr_t_set(bitarr_t* this, uint32_t index, bool bit);
-bool      bitarr_t_get(bitarr_t* this, uint32_t index);
+bitarr_t* bitarr_create(uint32_t capacity);
+void      bitarr_destroy(bitarr_t* this);
+void      bitarr_clear(bitarr_t* this);
+void      bitarr_set(bitarr_t* this, uint32_t index, bool bit);
+bool      bitarr_get(bitarr_t* this, uint32_t index);
 
 
 #endif /* ALGORITHM_BITARRAY_H_ */

@@ -21,7 +21,7 @@ add_library(${LIB} STATIC ${SOURCES} ${HEADERS})
 
 
 # Libraries
-target_link_libraries(${LIB} PRIVATE m)
+target_link_libraries(${LIB} PRIVATE m storage)
 
 
 # Include Directories
