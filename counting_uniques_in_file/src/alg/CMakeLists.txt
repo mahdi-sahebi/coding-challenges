@@ -6,6 +6,7 @@
 
 # Variables
 set(PUBLIC_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include)
+set(HEADERS ${PUBLIC_INCLUDE_DIRS}/common/error.h)
 set(HEADERS ${PUBLIC_INCLUDE_DIRS}/alg/alg.h)
 set(SOURCES alg.c)
 set(LIB alg)
