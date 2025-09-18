@@ -17,10 +17,11 @@ set(LIB alg)
 
 
 # Executables
-add_library(alg STATIC ${SOURCES} ${HEADERS})
+add_library(${LIB} STATIC ${SOURCES} ${HEADERS})
 
 
 # Libraries
+target_link_libraries(${LIB} PRIVATE m)
 
 
 # Include Directories
