@@ -2,6 +2,7 @@
 
 
 # Subdirectories
+add_subdirectory(storage)
 add_subdirectory(alg)
 
 
