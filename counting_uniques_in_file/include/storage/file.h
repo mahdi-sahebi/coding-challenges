@@ -9,18 +9,18 @@
 typedef void file_t;
 
 
-file_t*  file_open(const char* const path);
-error_t  file_close(file_t* this);
-uint32_t file_read(file_t* this, void* buffer, uint32_t size);
-uint32_t file_write(file_t* this, const void* buffer, uint32_t size);
-uint32_t file_append(file_t* this, void* buffer, uint32_t size);
-void     file_clear(file_t* this);
-uint32_t file_seek(file_t* this, uint32_t offset);
-bool     file_eof(file_t* this);
-uint32_t file_get_size(const char* const path);
-bool     file_create(const char* const path);
-bool     file_exists(const char* const path);
-bool     file_delete(const char* const path);
+result_ptr file_open(const char* const path);
+error_t    file_close(file_t* this);
+result_u32 file_read(file_t* this, void* buffer, uint32_t size);
+result_u32 file_write(file_t* this, const void* buffer, uint32_t size);
+result_u32 file_append(file_t* this, void* buffer, uint32_t size);
+error_t    file_clear(file_t* this);
+result_u32 file_seek(file_t* this, uint32_t offset);
+result_bit file_eof(file_t* this);
+result_u32 file_get_size(const char* const path);
+result_bit file_create(const char* const path);
+result_bit file_exists(const char* const path);
+result_bit file_delete(const char* const path);
 
 
 #endif /* STORAGE_FILE_H_ */
