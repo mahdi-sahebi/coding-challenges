@@ -2,9 +2,11 @@
 #define ALG_H_
 
 #include <stdint.h>
+#include "common/error.h"
 
-uint32_t alg_count_pure(const char* const file_path);
-uint32_t alg_count_unique(const char* const file_path);
+
+result_u32 alg_count_pure(const char* const file_path);
+result_u32 alg_count_unique(const char* const file_path);
 
 
 #endif /* ALG_H_ */
