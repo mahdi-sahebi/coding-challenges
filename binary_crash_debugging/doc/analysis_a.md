@@ -191,3 +191,17 @@ It tried to use 'read()' and 'close()' system calls with invalid file descriptor
 
 
 ### Access Violation
+And if look at this report:
+
+```
+==7699== Process terminating with default action of signal 11 (SIGSEGV)
+==7699==  Access not within mapped region at address 0x0
+==7699==    at 0x401776: ??? (in /media/mahdi/common/repositories/coding-challenges/binary_crash_debugging/deps/a)
+==7699==    by 0x401D78: ??? (in /media/mahdi/common/repositories/coding-challenges/binary_crash_debugging/deps/a)
+==7699==    by 0x401609: ??? (in /media/mahdi/common/repositories/coding-challenges/binary_crash_debugging/deps/a)
+==7699==    by 0x1FFEFFFCB7: ???
+```
+
+It is obvious that program has tried to access the **0x00** address which is not valid in many cases specially in OS.
+It is similiar to NULL derefrencing.
+
