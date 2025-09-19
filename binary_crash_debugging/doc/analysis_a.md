@@ -205,3 +205,126 @@ And if look at this report:
 It is obvious that program has tried to access the **0x00** address which is not valid in many cases specially in OS.
 It is similiar to NULL derefrencing.
 
+
+
+<br>
+<br>
+
+## GDB
+Now let's dive into more details in binary. First, let's see are debug symbols are available or not.
+
+
+```bash
+ gdb ./deps/a 
+GNU gdb (Ubuntu 15.0.50.20240403-0ubuntu1) 15.0.50.20240403-git
+Copyright (C) 2024 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+(No debugging symbols found in ./deps/a)
+(gdb) 
+```
+
+See **No debugging symbols found** which tells us the debug symbols are available. Maybe it is a release version or even stripped.
+
+Debugging for this file is a little challenging without debugging symbols.
+
+
+### Run
+To execute the program, run command below:
+
+```bash
+(gdb) run
+Starting program: /media/mahdi/common/repositories/coding-challenges/binary_crash_debugging/deps/a 
+
+Program received signal SIGSEGV, Segmentation fault.
+0x0000000000401776 in ?? ()
+(gdb)
+```
+
+Now we see the crashing.
+
+
+### Info
+For reading value of possible variables, args and registers use commands below:
+
+**Local Variables:**
+```
+info locals
+```
+
+**Arguments:**
+```
+info args
+```
+
+**Registers:**
+```
+info registers
+```
+
+
+**Output:**:
+```
+(gdb) info args 
+No symbol table info available.
+(gdb) info locals 
+No symbol table info available.
+(gdb) info registers
+rax            0x7fffffffd790      140737488344976
+rbx            0x400470            4195440
+rcx            0x400               1024
+rdx            0x0                 0
+rsi            0x0                 0
+rdi            0xffffffffffffffff  -1
+rbp            0x7fffffffdbb0      0x7fffffffdbb0
+rsp            0x7fffffffd790      0x7fffffffd790
+r8             0x0                 0
+r9             0xb                 11
+r10            0x0                 0
+r11            0x246               582
+r12            0x4024d0            4203728
+r13            0x0                 0
+r14            0x4a4018            4866072
+r15            0x0                 0
+rip            0x401776            0x401776
+eflags         0x10206             [ PF IF RF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+fs_base        0x4a8880            4884608
+gs_base        0x0                 0
+(gdb) 
+```
+
+Well, No local and arguments symbols are available.
+As we are using on x86 CPU, so the let's check the current instruction.
+In ARM architecture, the current instruction is **PC** register and on the x86 is **RIP** which contains **0x401776**.
+
+
+### Instruction Inspection
+Now we can diassemble the instruction that caused the crash. For doing this we use commands below:
+
+```
+(gdb) x/1i $rip
+=> 0x401776:	mov    %rsi,(%rdx)
+(gdb) 
+```
+It says shows one instruction from location of **RIP** register.
+We see that tried to copy value from register **RSI** to the memory pointed at address of **RDX** register, so let's watch the values of these registers by command below:
+
+```
+(gdb) info registers rsi rdx
+rsi            0x0                 0
+rdx            0x0                 0
+```
+
+Now we found the problem. The register rsi holds 0 which is ok, but wanted to copy value 0 to address **0x00** which is the problem. It is similar to derefrencing a NULL pointer.
+
+
