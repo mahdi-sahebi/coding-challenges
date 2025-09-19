@@ -157,3 +157,37 @@ According to this report:
 
 We find out no memroy leak exists and also no **heap** allocation was used. Therefore, let's go to check memory corruption issues.
 
+
+### Uninitialized
+
+The the begin of Valgrind report we see some uninitialized variables in the code which can be error-prone.
+
+| Address |
+| :--: |
+| 0x414E83 |
+| 0x462999 |
+| 0x414F29 |
+| 0x462999 |
+| 0x413213 |
+| 0x462999 |
+| 0x439A54 |
+| 0x465738 |
+
+
+### System Call
+
+For report below:
+```
+==7699== Warning: invalid file descriptor -1 in syscall read()
+==7699== Warning: invalid file descriptor -1 in syscall close()
+==7699== Invalid write of size 8
+==7699==    at 0x401776: ??? (in /media/mahdi/common/repositories/coding-challenges/binary_crash_debugging/deps/a)
+==7699==    by 0x401D78: ??? (in /media/mahdi/common/repositories/coding-challenges/binary_crash_debugging/deps/a)
+==7699==    by 0x401609: ??? (in /media/mahdi/common/repositories/coding-challenges/binary_crash_debugging/deps/a)
+==7699==    by 0x1FFEFFFCB7: ???
+```
+
+It tried to use 'read()' and 'close()' system calls with invalid file descriptor **-1**.
+
+
+### Access Violation
