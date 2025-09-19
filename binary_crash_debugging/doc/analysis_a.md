@@ -19,7 +19,7 @@ Now we see the program crashes without any sign and the sitation is bad!, so we 
 <br>
 <br>
 
-## 2. Valgrind Checking
+# 2. Valgrind Checking
 To use Valgrind as analyser use command below with options:
 
 Command:
@@ -144,7 +144,7 @@ Segmentation fault (core dumped)
 ```
 
 
-### Heap
+## Heap
 
 According to this report:
 ```
@@ -158,7 +158,7 @@ According to this report:
 We find out no memroy leak exists and also no **heap** allocation was used. Therefore, let's go to check memory corruption issues.
 
 
-### Uninitialized
+## Uninitialized
 
 The the begin of Valgrind report we see some uninitialized variables in the code which can be error-prone.
 
@@ -174,7 +174,7 @@ The the begin of Valgrind report we see some uninitialized variables in the code
 | 0x465738 |
 
 
-### System Call
+## System Call
 
 For report below:
 ```
@@ -190,7 +190,7 @@ For report below:
 It tried to use 'read()' and 'close()' system calls with invalid file descriptor **-1**.
 
 
-### Access Violation
+## Access Violation
 And if look at this report:
 
 ```
@@ -210,7 +210,7 @@ It is similiar to NULL derefrencing.
 <br>
 <br>
 
-## GDB
+# GDB
 Now let's dive into more details in binary. First, let's see are debug symbols are available or not.
 
 
@@ -233,7 +233,7 @@ See **No debugging symbols found** which tells us the debug symbols are availabl
 Debugging for this file is a little challenging without debugging symbols.
 
 
-### Run
+## Run
 To execute the program, run command below:
 
 ```bash
@@ -248,7 +248,7 @@ Program received signal SIGSEGV, Segmentation fault.
 Now we see the crashing.
 
 
-### Info
+## Info
 For reading value of possible variables, args and registers use commands below:
 
 **Local Variables:**
@@ -308,7 +308,7 @@ As we are using on x86 CPU, so the let's check the current instruction.
 In ARM architecture, the current instruction is **PC** register and on the x86 is **RIP** which contains **0x401776**.
 
 
-### Instruction Inspection
+## Instruction Inspection
 Now we can diassemble the instruction that caused the crash. For doing this we use commands below:
 
 ```
@@ -326,5 +326,67 @@ rdx            0x0                 0
 ```
 
 Now we found the problem. The register rsi holds 0 which is ok, but wanted to copy value 0 to address **0x00** which is the problem. It is similar to derefrencing a NULL pointer.
+
+## Inspecting Source
+Ok, now how are we going to find out the source of this NULL pointer derefrence?
+Maybe we should take a look at instructions before this error.
+
+Use this command to look at 16 instructions at 40 bytes before **RIP**:
+```
+x/16i $rip-40
+```
+
+Output:
+```
+(gdb) x/16i $rip-40
+   0x40174e:	add    (%rax),%eax
+   0x401750:	mov    -0x10(%rbp),%rax
+   0x401754:	mov    %rax,%rdi
+   0x401757:	call   0x414e30
+   0x40175c:	mov    %rax,-0x20(%rbp)
+   0x401760:	mov    -0x20(%rbp),%rax
+   0x401764:	mov    %rax,%rdx
+   0x401767:	lea    -0x420(%rbp),%rax
+   0x40176e:	mov    $0x400,%ecx
+   0x401773:	mov    (%rax),%rsi
+=> 0x401776:	mov    %rsi,(%rdx)
+   0x401779:	mov    %ecx,%esi
+   0x40177b:	add    %rdx,%rsi
+   0x40177e:	lea    0x8(%rsi),%rdi
+   0x401782:	mov    %ecx,%esi
+   0x401784:	add    %rax,%rsi
+```
+
+It sounds there were a function call by instruction **call**, then return value is stored in the **rax** register and finally copy into the **RDX** which was the problem at instruction below:
+```
+   0x401764:	mov    %rax,%rdx
+```
+
+So we see the function at **0x414e30** returns NULL value and user didn't checked the reading pointer which is dangerous.
+
+For making sure, lets set a break point just after the call instruction and read the returned value.
+
+Set a breakpoint at address **0x40175c**:
+```
+break * 0x40175c
+```
+
+Now re-run the program to stop at the breakpoint:
+```
+run
+```
+
+Now read register **RAX**:
+```
+info registers rax
+```
+
+Output:
+```
+(gdb) info registers rax
+rax            0x0                 0
+```
+Now we are sure that returned value is NULL from function at **0x414e30**.
+
 
 
