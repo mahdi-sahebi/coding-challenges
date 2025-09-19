@@ -1,6 +1,6 @@
 # ANALYSIS 'a'
 
-### 1. Execute
+## 1. Execute
 To get start, first of all let's execute the binary file normally and see the result.
 
 ```bach
@@ -19,7 +19,7 @@ Now we see the program crashes without any sign and the sitation is bad!, so we 
 <br>
 <br>
 
-### 2. Valgrind Checking
+## 2. Valgrind Checking
 To use Valgrind as analyser use command below with options:
 
 Command:
@@ -142,3 +142,18 @@ Output:
 ==7699== ERROR SUMMARY: 6 errors from 6 contexts (suppressed: 0 from 0)
 Segmentation fault (core dumped)
 ```
+
+
+### Heap
+
+According to this report:
+```
+==7699== HEAP SUMMARY:
+==7699==     in use at exit: 0 bytes in 0 blocks
+==7699==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==7699== 
+==7699== All heap blocks were freed -- no leaks are possible
+```
+
+We find out no memroy leak exists and also no **heap** allocation was used. Therefore, let's go to check memory corruption issues.
+
