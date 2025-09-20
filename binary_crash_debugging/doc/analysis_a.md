@@ -228,7 +228,7 @@ Type "show configuration" for configuration details.
 (gdb) 
 ```
 
-See **No debugging symbols found** which tells us the debug symbols are available. Maybe it is a release version or even stripped.
+See **No debugging symbols found** which tells us the debug symbols are not available. Maybe it is a release version or even stripped.
 
 Debugging for this file is a little challenging without debugging symbols.
 
