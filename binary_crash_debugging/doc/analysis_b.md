@@ -338,3 +338,70 @@ run
 
 
 
+
+## Function
+Not let's go to check how info are we able read from this function.
+
+Read available info from this function address:
+```
+info symbol 0x406c70
+```
+
+Output:
+```
+(gdb) info symbol 0x406c70
+No symbol matches 0x406c70.
+(gdb) 
+```
+
+As we have saw earlier, this binary file has been stripped and has not any symbol.
+Now let's extarct the function instruction from start address to the **ret** instruction.
+
+Output:
+```
+(gdb) x/50i $rip
+=> 0x406c70:	push   %r15
+   0x406c72:	push   %r14
+   0x406c74:	mov    %rdi,%r15
+   0x406c77:	push   %r13
+   0x406c79:	push   %r12
+   0x406c7b:	push   %rbp
+   0x406c7c:	push   %rbx
+   0x406c7d:	sub    $0x8,%rsp
+   0x406c81:	call   0x417e90
+   0x406c86:	mov    0x2ad9b3(%rip),%rbp        # 0x6b4640
+   0x406c8d:	test   %rbp,%rbp
+   0x406c90:	je     0x406d48
+   0x406c96:	mov    %rax,%r13
+   0x406c99:	movzbl (%r15),%eax
+   0x406c9d:	test   %al,%al
+   0x406c9f:	je     0x406d48
+   0x406ca5:	cmpb   $0x0,0x1(%r15)
+   0x406caa:	jne    0x406cf0
+   0x406cac:	mov    0x0(%rbp),%rbx
+   0x406cb0:	or     $0x3d,%ah
+   0x406cb3:	test   %rbx,%rbx
+   0x406cb6:	jne    0x406ccd
+   0x406cb8:	jmp    0x406cd6
+   0x406cba:	nopw   0x0(%rax,%rax,1)
+   0x406cc0:	add    $0x8,%rbp
+   0x406cc4:	mov    0x0(%rbp),%rbx
+   0x406cc8:	test   %rbx,%rbx
+   0x406ccb:	je     0x406cd6
+   0x406ccd:	cmp    (%rbx),%ax
+   0x406cd0:	jne    0x406cc0
+   0x406cd2:	add    $0x2,%rbx
+   0x406cd6:	add    $0x8,%rsp
+   0x406cda:	mov    %rbx,%rax
+   0x406cdd:	pop    %rbx
+   0x406cde:	pop    %rbp
+   0x406cdf:	pop    %r12
+   0x406ce1:	pop    %r13
+   0x406ce3:	pop    %r14
+   0x406ce5:	pop    %r15
+   0x406ce7:	ret
+```
+
+
+I just have basic aesembly knowledge and not able to go further by now, but will try to understand soon.
+
