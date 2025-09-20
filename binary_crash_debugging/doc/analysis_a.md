@@ -316,7 +316,7 @@ Now we can diassemble the instruction that caused the crash. For doing this we u
 => 0x401776:	mov    %rsi,(%rdx)
 (gdb) 
 ```
-It says shows one instruction from location of **RIP** register.
+It shows one instruction from location of **RIP** register.
 We see that tried to copy value from register **RSI** to the memory pointed at address of **RDX** register, so let's watch the values of these registers by command below:
 
 ```

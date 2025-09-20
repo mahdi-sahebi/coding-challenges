@@ -266,6 +266,7 @@ As we are using on x86 CPU, so the let's check the current instruction.
 In ARM architecture, the current instruction is **PC** register and on the x86 is **RIP** which contains **0x400b67**.
 
 
+<br>
 
 ## Instruction Inspection
 Now we can diassemble the instruction that caused the crash. For doing this we use commands below:
@@ -276,8 +277,11 @@ Now we can diassemble the instruction that caused the crash. For doing this we u
 (gdb) 
 
 ```
-It says shows one instruction from location of **RIP** register.
-We see that tried to copy value from register **RAX** to the memory pointed at address of **EAX** register, so let's watch the values of these registers by command below:
+It shows one instruction from location of **RIP** register.
+It copies with zero-extend one byte from address at **RAX** to the address pointed at **EAX** register.
+
+Note that the **EAX** is the lower 32bit of **RAX**, so when EAX is 0 the EAX is also 0.
+so let's watch the values of these registers by command below:
 
 ```
 => 0x400b67:	movzbl (%rax),%eax
@@ -286,5 +290,51 @@ rax            0x0                 0
 eax            0x0                 0
 ```
 
-Now we found the problem. The register rax holds 0 which is ok, but wanted to copy value 0 to address **0x00** which is the problem. It is similar to derefrencing a NULL pointer.
+Now we found the problem. The register rax holds 0 which is ok, but wanted to copy value 0 to address **0x00** which is the problem. It is derefrencing a NULL pointer.
+
+
+<br>
+
+## Inspecting Source
+Ok, now how are we going to find out the source of this NULL pointer derefrence?
+Maybe we should take a look at instructions before this error.
+
+Use this command to look at 16 instructions at 40 bytes before **RIP**:
+```
+x/16i $rip-40
+```
+
+Output:
+```
+(gdb) x/10i $rip -40
+   0x400b3f:	rex.RB sarb $1,0x20(%r10)
+   0x400b46:	mov    $0x0,%esi
+   0x400b4b:	mov    %rax,%rdi
+   0x400b4e:	call   0x400360
+   0x400b53:	lea    0x8914a(%rip),%rdi        # 0x489ca4
+   0x400b5a:	call   0x406c70
+   0x400b5f:	mov    %rax,-0x10(%rbp)
+   0x400b63:	mov    -0x10(%rbp),%rax
+=> 0x400b67:	movzbl (%rax),%eax
+   0x400b6a:	cmp    $0x2f,%al
+```
+
+It is clear that the RAX is came from **RBP** which is came from **RAX** again as return value of call function at address **0x406c70**.
+
+For making sure, lets set a break point just after the call instruction and read the returned value.
+
+Set a breakpoint at address **0x406c70**:
+```
+break *0x406c70
+```
+
+Now re-run the program to stop at the breakpoint:
+```
+run
+```
+
+<br>
+<br>
+
+
 
