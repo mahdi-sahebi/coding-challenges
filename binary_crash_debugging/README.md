@@ -28,5 +28,5 @@ sudo apt install gdb valgrind
 ```
 
 ## Analysis
-The report has been provided at [here](/doc/analysis.md).
+The report has been provided for [binary a](/doc/analysis_a.md) and [binary b](/doc/analysis_b.md).
 
