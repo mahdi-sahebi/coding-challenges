@@ -368,7 +368,7 @@ For making sure, lets set a break point just after the call instruction and read
 
 Set a breakpoint at address **0x40175c**:
 ```
-break * 0x40175c
+break *0x40175c
 ```
 
 Now re-run the program to stop at the breakpoint:
@@ -389,4 +389,49 @@ rax            0x0                 0
 Now we are sure that returned value is NULL from function at **0x414e30**.
 
 
+<br>
+<br>
 
+## Function
+Not let's go to check how info are we able read from this function.
+
+Read available info from this function address:
+```
+info symbol 0x414e30
+```
+
+Output:
+```
+(gdb) info symbol 0x414e30
+No symbol matches 0x414e30.
+```
+
+As we have saw earlier, this binary file has been stripped and has not any symbol.
+Let's look at the available function:
+```
+info functions
+```
+
+Output:
+```
+(gdb) info functions
+All defined functions:
+
+Non-debugging symbols:
+0x00007ffff7ffe1b0  __vdso_gettimeofday
+0x00007ffff7ffe1b0  gettimeofday
+0x00007ffff7ffe1c0  __vdso_time
+0x00007ffff7ffe1c0  time
+0x00007ffff7ffe1f0  __vdso_clock_gettime
+0x00007ffff7ffe1f0  clock_gettime
+0x00007ffff7ffe200  __vdso_clock_getres
+0x00007ffff7ffe200  clock_getres
+0x00007ffff7ffe280  __vdso_getcpu
+0x00007ffff7ffe280  getcpu
+0x00007ffff7ffe2b0  __vdso_getrandom
+0x00007ffff7ffe2b0  getrandom
+0x00007ffff7ffe7f0  __vdso_sgx_enter_enclave
+(gdb) 
+```
+
+No info available, but according to the Valgrind report there were an invalid file descriptor probably for **read()** or **close()** file for socket without any check. So user should locate all file APIs to find the crash reason.
