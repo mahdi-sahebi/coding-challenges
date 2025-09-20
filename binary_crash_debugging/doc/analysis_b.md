@@ -265,3 +265,26 @@ Well, No local and arguments symbols are available.
 As we are using on x86 CPU, so the let's check the current instruction.
 In ARM architecture, the current instruction is **PC** register and on the x86 is **RIP** which contains **0x400b67**.
 
+
+
+## Instruction Inspection
+Now we can diassemble the instruction that caused the crash. For doing this we use commands below:
+
+```
+(gdb) x/1i $rip
+=> 0x400b67:	movzbl (%rax),%eax
+(gdb) 
+
+```
+It says shows one instruction from location of **RIP** register.
+We see that tried to copy value from register **RAX** to the memory pointed at address of **EAX** register, so let's watch the values of these registers by command below:
+
+```
+=> 0x400b67:	movzbl (%rax),%eax
+(gdb) info registers rax eax
+rax            0x0                 0
+eax            0x0                 0
+```
+
+Now we found the problem. The register rax holds 0 which is ok, but wanted to copy value 0 to address **0x00** which is the problem. It is similar to derefrencing a NULL pointer.
+
