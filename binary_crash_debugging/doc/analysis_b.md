@@ -107,3 +107,29 @@ Output:
 ==5991== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
 Segmentation fault (core dumped)
 ```
+
+
+
+## Heap
+According to this report:
+```
+==5991== HEAP SUMMARY:
+==5991==     in use at exit: 0 bytes in 0 blocks
+==5991==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==5991== 
+==5991== All heap blocks were freed -- no leaks are possible
+```
+
+We find out no memroy leak exists and also no **heap** allocation was used. Therefore, let's go to check memory corruption issues.
+
+
+
+## Uninitialized
+The the begin of Valgrind report we see some uninitialized variables in the code which can be error-prone.
+
+| Address |
+| :--: |
+| 0x458EE9 |
+| 0x41033D |
+| 0x458EE9 |
+
