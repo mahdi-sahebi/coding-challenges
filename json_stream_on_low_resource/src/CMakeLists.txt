@@ -3,7 +3,7 @@
 
 # Variables
 set(PUBLIC_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include)
-set(HEADERS ${PUBLIC_INCLUDE_DIRS}/model.h)
+set(HEADERS ${PUBLIC_INCLUDE_DIRS}/model/model.h)
 set(SOURCES model.c)
 set(LIB model)
 
@@ -22,4 +22,6 @@ add_library(${LIB} STATIC ${SOURCES} ${HEADERS})
 
 
 # Include Directories
-
+target_include_directories(${LIB}
+  PUBLIC ${PUBLIC_INCLUDE_DIRS}
+)
