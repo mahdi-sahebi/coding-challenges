@@ -1,6 +1,9 @@
+/* TODO(MN): ASSERT APIs go out of function withtout free memories
+ */
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <inttypes.h>
 #include "model/model.h"
 
 
@@ -17,7 +20,7 @@ typedef enum
 #define ASSERT_EQ(EXP_1, EXP_2)\
 do {\
   if ((EXP_1) != (EXP_2)) {\
-    printf("%s expected to be equal %s\n", STRING(EXP_1), STRING(EXP_2));\
+    printf("[%s] is %" PRIu64 ", but expected to be %" PRIu64 "\n", STRING(EXP_1), (uint64_t)EXP_1, (uint64_t)EXP_2);\
     return MC_ERR_RUNTIME;\
   }\
 } while (0)
@@ -25,7 +28,7 @@ do {\
 #define ASSERT_NQ(EXP_1, EXP_2)\
 do {\
   if ((EXP_1) == (EXP_2)) {\
-    printf("%s expected to not be equal %s\n", STRING(EXP_1), STRING(EXP_2));\
+    printf("[%s] is %" PRIu64 ", but expected to not be %" PRIu64 "\n", STRING(EXP_1), (uint64_t)EXP_1, (uint64_t)EXP_2);\
     return MC_ERR_RUNTIME;\
   }\
 } while (0)
@@ -61,9 +64,8 @@ static void on_progress(float percent)
 static int test_big_file()
 {
   const char* const json_file = "bigf.json";
-  model_init(json_file, on_progress);
+  model_init(json_file, 50, on_progress);
   const models_t* const models = model_count();
-  model_deinit();
 
   ASSERT_EQ(models->count, 13);
   const pair_t SAMPLES[13] = {
@@ -89,6 +91,7 @@ static int test_big_file()
     ASSERT_EQ(SAMPLES[sample_index].count, models->list[index].count);
   }
 
+  model_deinit();
   return MC_SUCCESS;
 }
 
