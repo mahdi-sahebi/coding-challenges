@@ -55,15 +55,15 @@ static void on_progress(float percent)
 {
   static uint16_t update_counter = 0;
   update_counter++;
-  if (update_counter > 1000) {
+  if (update_counter > 10000) {
     update_counter = 0;
-    printf("%f%%\n", percent);
+    printf("%f%%\n", percent * 100);
   }
 }
 
 static int test_big_file()
 {
-  const char* const json_file = "bigf.json";
+  const char* const json_file = "/media/mahdi/common/repositories/bigf.json";
   model_init(json_file, 50, on_progress);
   const models_t* const models = model_count();
 
@@ -91,6 +91,7 @@ static int test_big_file()
     ASSERT_EQ(SAMPLES[sample_index].count, models->list[index].count);
   }
 
+  model_print();
   model_deinit();
   return MC_SUCCESS;
 }

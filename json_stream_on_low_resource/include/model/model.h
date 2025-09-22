@@ -22,6 +22,7 @@ typedef void (*model_progress_cb)(float percent);
 void      model_init(const char* const json_file, uint16_t capacity, model_progress_cb on_progress);
 void      model_deinit();
 models_t* model_count();
+void      model_print();
 
 
 #endif /* MODLE_H_ */

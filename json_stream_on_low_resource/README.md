@@ -40,3 +40,22 @@ sudo apt install cmake
 ```bash
 sudo apt install git
 ```
+
+
+# Output
+```
+ Count of models: 13
+[RDV2]: 33332954 Times
+[DRV1]: 33338513 Times
+[SSDLP2]: 33345174 Times
+[SSDF1]: 33328579 Times
+[123456789]: 33327094 Times
+[HGST2048T]: 33332531 Times
+[DSD07461]: 33333959 Times
+[broken]: 33328584 Times
+[SSDDC1]: 33327742 Times
+[SCSI3HD]: 33329611 Times
+[HGST3T]: 33337292 Times
+[HGST8T]: 33337967 Times
+[MODEL]: 1 Times
+```
