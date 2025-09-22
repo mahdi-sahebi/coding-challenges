@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <yajl/yajl_parse.h>
+#include <yajl/yajl_gen.h>
 #include "model/model.h"
 
 

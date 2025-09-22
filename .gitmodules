@@ -1,0 +1,3 @@
+[submodule "json_stream_on_low_resource/deps/yajl"]
+	path = json_stream_on_low_resource/deps/yajl
+	url = https://github.com/lloyd/yajl.git
