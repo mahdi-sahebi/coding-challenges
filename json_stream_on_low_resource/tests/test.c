@@ -1,9 +1,34 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#include <gtest/gtest.h>
 #include "model/model.h"
 
+
+typedef enum
+{
+  MC_SUCCESS = 0,
+  MC_ERR_RUNTIME,
+  MC_ERR_OUT_OF_RANGE,
+}error_t;
+
+#define STRING(EXP)\
+  #EXP
+
+#define ASSERT_EQ(EXP_1, EXP_2)\
+do {\
+  if ((EXP_1) != (EXP_2)) {\
+    printf("%s expected to be equal %s\n", STRING(EXP_1), STRING(EXP_2));\
+    return MC_ERR_RUNTIME;\
+  }\
+} while (0)
+
+#define ASSERT_NQ(EXP_1, EXP_2)\
+do {\
+  if ((EXP_1) == (EXP_2)) {\
+    printf("%s expected to not be equal %s\n", STRING(EXP_1), STRING(EXP_2));\
+    return MC_ERR_RUNTIME;\
+  }\
+} while (0)
 
 typedef struct
 {
@@ -33,40 +58,49 @@ static void on_progress(float percent)
   }
 }
 
-TEST(model, big_file)
+static int test_big_file()
 {
   const char* const json_file = "bigf.json";
   model_init(json_file, on_progress);
-  const models_t* const modles = model_count();
+  const models_t* const models = model_count();
   model_deinit();
 
-  ASSERT_EQ(13 == models->count);
+  ASSERT_EQ(models->count, 13);
   const pair_t SAMPLES[13] = {
-    {.name = "RDV2",-     .count = 33332954}
-    {.name = "DRV1",-     .count = 33338513}
-    {.name = "SSDLP2",-   .count = 33345174}
-    {.name = "SSDF1",-    .count = 33328579}
-    {.name = "123456789",-.count = 33327094}
-    {.name = "HGST2048T",-.count = 33332531}
-    {.name = "DSD07461", -.count = 33333959}
-    {.name = "broken",-   .count = 33328584}
-    {.name = "SSDDC1",-   .count = 33327742}
-    {.name = "SCSI3HD",-  .count = 33329611}
-    {.name = "HGST3T",-   .count = 33337292}
-    {.name = "HGST8T",-   .count = 33337967}
-    {.name = "MODEL",-    .count = 1}
+    {.name = "RDV2",      .count = 33332954},
+    {.name = "DRV1",      .count = 33338513},
+    {.name = "SSDLP2",    .count = 33345174},
+    {.name = "SSDF1",     .count = 33328579},
+    {.name = "123456789", .count = 33327094},
+    {.name = "HGST2048T", .count = 33332531},
+    {.name = "DSD07461",  .count = 33333959},
+    {.name = "broken",    .count = 33328584},
+    {.name = "SSDDC1",    .count = 33327742},
+    {.name = "SCSI3HD",   .count = 33329611},
+    {.name = "HGST3T",    .count = 33337292},
+    {.name = "HGST8T",    .count = 33337967},
+    {.name = "MODEL",     .count = 1}
   };
   const uint32_t SAMPLES_COUNT = sizeof(SAMPLES) / sizeof(*SAMPLES);
 
   for (uint32_t index = 0; index < models->count; index++) {
     const uint32_t sample_index = find_model_index(models->list[index].name, SAMPLES, SAMPLES_COUNT);
     ASSERT_NQ(sample_index, -1);
-    ASSERT_EQ(SAMPLES[sample_index].count, modles->list[index].count);
+    ASSERT_EQ(SAMPLES[sample_index].count, models->list[index].count);
   }
+
+  return MC_SUCCESS;
 }
 
 int main()
 {
-  InitGoogleTest();
-  return RUN_ALL_TESTS();
+  error_t error = MC_SUCCESS;
+
+  error = test_big_file();
+  if (error) {
+    printf("test_big_file() failed - %u\n", error);
+    return error;
+  }
+
+  return error;
 }

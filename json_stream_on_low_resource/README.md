@@ -40,9 +40,3 @@ sudo apt install cmake
 ```bash
 sudo apt install git
 ```
-
-#### Google Test
-```bash
-sudo apt install libgtest-dev
-```
-
