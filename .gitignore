@@ -1,0 +1,20 @@
+/*
+!.gitignore
+
+# counting_uniques_in_file
+counting_uniques_in_file/*
+!counting_uniques_in_file/include/
+!counting_uniques_in_file/src/
+!counting_uniques_in_file/test/
+!counting_uniques_in_file/CMakeLists.txt
+
+
+# json_stream_on_low_resource
+json_stream_on_low_resource/*
+!json_stream_on_low_resource/include/
+!json_stream_on_low_resource/src/
+!json_stream_on_low_resource/tests/
+!json_stream_on_low_resource/deps/
+!json_stream_on_low_resource/CMakeListst.txt
+!json_stream_on_low_resource/README.md
+
