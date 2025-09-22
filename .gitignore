@@ -2,6 +2,7 @@
 !.gitignore
 
 # counting_uniques_in_file
+!counting_uniques_in_file/
 counting_uniques_in_file/*
 !counting_uniques_in_file/include/
 !counting_uniques_in_file/src/
@@ -10,6 +11,7 @@ counting_uniques_in_file/*
 
 
 # json_stream_on_low_resource
+!json_stream_on_low_resource/
 json_stream_on_low_resource/*
 !json_stream_on_low_resource/include/
 !json_stream_on_low_resource/src/
